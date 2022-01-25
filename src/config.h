@@ -54,5 +54,3 @@
 #define WIFI_IPV4_DNS_2 1, 1, 1, 1
 // Prometheus namespace, aka metric prefix
 #define PROM_NAMESPACE "bme"
-
-#define SEALEVELPRESSURE_HPA (1013.25)

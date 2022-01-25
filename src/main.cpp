@@ -18,10 +18,11 @@ void setup_wifi();
 void log(char const *message, LogLevel level=LogLevel::INFO);
 float read_humidity_sensor();
 float read_temperature_sensor();
+float read_pressure_sensor();
 float calculate_heat_index(float temperature, float humidity);
 float calculate_dew_point(float temperature, float humidity);
 bool push_is_ready();
-bool push_metrics(float temperature, float humidity, float heat_index, float dew_point);
+bool push_metrics(float temperature, float humidity, float pressure, float heat_index, float dew_point);
 void check_and_push();
 
 // Adafruit_BME280 bme; // I2C
@@ -111,14 +112,15 @@ void check_and_push() {
         // Read sensors
         float temperature = read_temperature_sensor();
         float humidity = read_humidity_sensor();
+        float pressure = read_pressure_sensor();
         float heat_index = calculate_heat_index(temperature, humidity);
         float dew_point = calculate_dew_point(temperature, humidity);
     #if DEBUG_MODE == 1
-        snprintf(message, 128, "T: %f, H: %f, HI: %f, DP: %f", temperature, humidity, heat_index, dew_point);
+        snprintf(message, 128, "T: %f, H: %f, P: %f, HI: %f, DP: %f", temperature, humidity, pressure, heat_index, dew_point);
         log(message, LogLevel::DEBUG);
     #endif
         log("Pushing metrics", LogLevel::DEBUG);
-        if (push_metrics(temperature, humidity, heat_index, dew_point)) {
+        if (push_metrics(temperature, humidity, pressure, heat_index, dew_point)) {
             log("Metrics pushed successfully", LogLevel::INFO);
         } else {
             log("Metrics push failed", LogLevel::ERROR);
@@ -145,7 +147,7 @@ bool push_is_ready() {
     return true;
 }
 
-bool push_metrics(float temperature, float humidity, float heat_index, float dew_point) {
+bool push_metrics(float temperature, float humidity, float pressure, float heat_index, float dew_point) {
     static size_t const BUFSIZE = 1024;
     static char const *up_template =
         "# HELP " PROM_NAMESPACE "_up Metadata about the device.\n"
@@ -160,6 +162,10 @@ bool push_metrics(float temperature, float humidity, float heat_index, float dew
         "# TYPE " PROM_NAMESPACE "_temperature gauge\n"
         "# UNIT " PROM_NAMESPACE "_temperature \u00B0C\n"
         PROM_NAMESPACE "_temperature %f\n"
+        "# HELP " PROM_NAMESPACE "_pressure Air pressure.\n"
+        "# TYPE " PROM_NAMESPACE "_pressure gauge\n"
+        "# UNIT " PROM_NAMESPACE "_pressure Pa\n"
+        PROM_NAMESPACE "_pressure %f\n"
         "# HELP " PROM_NAMESPACE "_heat_index Apparent air temperature, based on temperature and humidity.\n"
         "# TYPE " PROM_NAMESPACE "_heat_index gauge\n"
         "# UNIT " PROM_NAMESPACE "_heat_index \u00B0C\n"
@@ -170,11 +176,11 @@ bool push_metrics(float temperature, float humidity, float heat_index, float dew
         PROM_NAMESPACE "_dew_point %f\n";
 
     char response[BUFSIZE];
-    if (isnan(humidity) || isnan(temperature)) {
+    if (isnan(humidity) || isnan(temperature) || isnan(pressure)) {
         snprintf(response, BUFSIZE, up_template, VERSION, BOARD_NAME, SENSOR_NAME, WiFi.macAddress().c_str(), 0);
     } else {
         int cx = snprintf(response, BUFSIZE, up_template, VERSION, BOARD_NAME, SENSOR_NAME, WiFi.macAddress().c_str(), 1);
-        snprintf(response+cx, BUFSIZE-cx, response_template, humidity, temperature, heat_index, dew_point);
+        snprintf(response+cx, BUFSIZE-cx, response_template, humidity, temperature, pressure, heat_index, dew_point);
     }
     String job = base64::encode(JOB);
     String room = base64::encode(ROOM);
@@ -222,6 +228,15 @@ float read_humidity_sensor() {
         log("Failed to read humidity sensor.", LogLevel::ERROR);
     }
     return humidity;
+}
+
+float read_pressure_sensor() {
+    log("Reading pressure sensor ...", LogLevel::DEBUG);
+    float pressure = bme.readPressure();
+    if (isnan(pressure)) {
+        log("Failed to read pressure sensor.", LogLevel::ERROR);
+    }
+    return pressure;
 }
 
 float calculate_heat_index(float temperature, float humidity) {

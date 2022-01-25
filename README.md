@@ -9,6 +9,7 @@ Intended to be used on battery power, device goes into deep sleep between pushes
 | `bme_up` | Status and metadata | |
 | `bme_humidity` | Air humidity. | `%` |
 | `bme_temperature` | Air temperature. | `°C` |
+| `bme_pressure` | Air pressure. | `Pa` |
 | `bme_heat_index` | Apparent air temperature, based on temperature and humidity. | `°C` |
 | `bme_dew_point` | Dew point, based on temperature and humidity. | `°C` |
 
