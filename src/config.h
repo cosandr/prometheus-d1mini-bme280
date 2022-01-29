@@ -2,8 +2,6 @@
 
 // Pushgateway URL, with port
 #define URL "http://10.0.10.21:9091"
-#define JOB "bme"
-#define INSTANCE WIFI_HOSTNAME
 // Number of retries waiting for the gateway to be up, 500ms between retries
 #define PUSHGATEWAY_WAIT 5
 
@@ -53,4 +51,4 @@
 // Static IPv4 secondary DNS server
 #define WIFI_IPV4_DNS_2 1, 1, 1, 1
 // Prometheus namespace, aka metric prefix
-#define PROM_NAMESPACE "bme"
+#define PROM_NAMESPACE "iot"

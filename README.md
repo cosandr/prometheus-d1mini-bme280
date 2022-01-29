@@ -6,12 +6,12 @@ Intended to be used on battery power, device goes into deep sleep between pushes
 
 | Metric | Description | Unit |
 | - | - | - |
-| `bme_up` | Status and metadata | |
-| `bme_humidity` | Air humidity. | `%` |
-| `bme_temperature` | Air temperature. | `°C` |
-| `bme_pressure` | Air pressure. | `Pa` |
-| `bme_heat_index` | Apparent air temperature, based on temperature and humidity. | `°C` |
-| `bme_dew_point` | Dew point, based on temperature and humidity. | `°C` |
+| `iot_up` | Status and metadata | |
+| `iot_humidity` | Air humidity. | `%` |
+| `iot_temperature` | Air temperature. | `°C` |
+| `iot_pressure` | Air pressure. | `Pa` |
+| `iot_heat_index` | Apparent air temperature, based on temperature and humidity. | `°C` |
+| `iot_dew_point` | Dew point, based on temperature and humidity. | `°C` |
 
 ## Requirements
 

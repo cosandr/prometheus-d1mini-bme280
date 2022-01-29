@@ -182,11 +182,10 @@ bool push_metrics(float temperature, float humidity, float pressure, float heat_
         int cx = snprintf(response, BUFSIZE, up_template, VERSION, BOARD_NAME, SENSOR_NAME, WiFi.macAddress().c_str(), 1);
         snprintf(response+cx, BUFSIZE-cx, response_template, humidity, temperature, pressure, heat_index, dew_point);
     }
-    String job = base64::encode(JOB);
     String room = base64::encode(ROOM);
-    String instance = base64::encode(INSTANCE);
+    String hostname = base64::encode(WIFI_HOSTNAME);
     char url[256];
-    snprintf(url, 256, "%s/metrics/job@base64/%s/instance@base64/%s/room@base64/%s", URL, job.c_str(), instance.c_str(), room.c_str());
+    snprintf(url, 256, "%s/metrics/hostname@base64/%s/room@base64/%s", URL, hostname.c_str(), room.c_str());
 
     http.begin(wifiClient, url);
     http.addHeader("Content-Type", "text/plain; version=0.0.4");
