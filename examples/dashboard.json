@@ -22,7 +22,7 @@
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
     "id": 53,
-    "iteration": 1643145587222,
+    "iteration": 1643464435082,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -116,9 +116,9 @@
               "uid": "PBFA97CFB590B2093"
             },
             "exemplar": true,
-            "expr": "bme_temperature{exported_instance=~\"$instance\", room=~\"$room\"}",
+            "expr": "iot_temperature{hostname=~\"$hostname\", room=~\"$room\"}",
             "interval": "",
-            "legendFormat": "{{ exported_instance }} - {{ room }}",
+            "legendFormat": "{{ hostname }} - {{ room }}",
             "refId": "A"
           }
         ],
@@ -209,9 +209,9 @@
               "uid": "PBFA97CFB590B2093"
             },
             "exemplar": true,
-            "expr": "bme_humidity{exported_instance=~\"$instance\", room=~\"$room\"}",
+            "expr": "iot_humidity{hostname=~\"$hostname\", room=~\"$room\"}",
             "interval": "",
-            "legendFormat": "{{ exported_instance }} - {{ room }}",
+            "legendFormat": "{{ hostname }} - {{ room }}",
             "refId": "A"
           }
         ],
@@ -303,9 +303,9 @@
               "uid": "PBFA97CFB590B2093"
             },
             "exemplar": true,
-            "expr": "bme_pressure{exported_instance=~\"$instance\", room=~\"$room\"}",
+            "expr": "iot_pressure{hostname=~\"$hostname\", room=~\"$room\"}",
             "interval": "",
-            "legendFormat": "{{ exported_instance }} - {{ room }}",
+            "legendFormat": "{{ hostname }} - {{ room }}",
             "refId": "A"
           }
         ],
@@ -402,9 +402,9 @@
               "uid": "PBFA97CFB590B2093"
             },
             "exemplar": true,
-            "expr": "bme_heat_index{exported_instance=~\"$instance\", room=~\"$room\"}",
+            "expr": "iot_heat_index{hostname=~\"$hostname\", room=~\"$room\"}",
             "interval": "",
-            "legendFormat": "{{ exported_instance }} - {{ room }}",
+            "legendFormat": "{{ hostname }} - {{ room }}",
             "refId": "A"
           }
         ],
@@ -501,9 +501,9 @@
               "uid": "PBFA97CFB590B2093"
             },
             "exemplar": true,
-            "expr": "bme_dew_point{exported_instance=~\"$instance\", room=~\"$room\"}",
+            "expr": "iot_dew_point{hostname=~\"$hostname\", room=~\"$room\"}",
             "interval": "",
-            "legendFormat": "{{ exported_instance }} - {{ room }}",
+            "legendFormat": "{{ hostname }} - {{ room }}",
             "refId": "A"
           }
         ],
@@ -531,14 +531,14 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "definition": "label_values(bme_up, exported_instance)",
+          "definition": "label_values(iot_up{sensor=~\"$sensor\"}, hostname)",
           "hide": 0,
           "includeAll": true,
           "multi": true,
-          "name": "instance",
+          "name": "hostname",
           "options": [],
           "query": {
-            "query": "label_values(bme_up, exported_instance)",
+            "query": "label_values(iot_up{sensor=~\"$sensor\"}, hostname)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 1,
@@ -549,28 +549,62 @@
         },
         {
           "current": {
-            "selected": false,
-            "text": "All",
-            "value": "$__all"
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
           },
           "datasource": {
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "definition": "label_values(bme_up, room)",
+          "definition": "label_values(iot_up{sensor=~\"$sensor\"}, room)",
           "hide": 0,
           "includeAll": true,
           "multi": true,
           "name": "room",
           "options": [],
           "query": {
-            "query": "label_values(bme_up, room)",
+            "query": "label_values(iot_up{sensor=~\"$sensor\"}, room)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 1,
           "regex": "",
           "skipUrlSync": false,
           "sort": 1,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "bme280"
+            ],
+            "value": [
+              "bme280"
+            ]
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "definition": "label_values(iot_up, sensor)",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "sensor",
+          "options": [],
+          "query": {
+            "query": "label_values(iot_up, sensor)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
           "type": "query"
         }
       ]
@@ -583,6 +617,6 @@
     "timezone": "",
     "title": "ESP8266 BME",
     "uid": "uwnPvcx7k",
-    "version": 8,
+    "version": 11,
     "weekStart": ""
   }
