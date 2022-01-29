@@ -1,17 +1,17 @@
-# Push metrics from BME280 sensor to Prometheus' Pushgateway
+# BME280 sensor Prometheus Exporter
 
-Intended to be used on battery power, device goes into deep sleep between pushes.
+Intended to be used on battery power, device goes into deep sleep between scrapes.
 
 ## Metrics
 
 | Metric | Description | Unit |
 | - | - | - |
-| `bme_up` | Status and metadata | |
-| `bme_humidity` | Air humidity. | `%` |
-| `bme_temperature` | Air temperature. | `°C` |
-| `bme_pressure` | Air pressure. | `Pa` |
-| `bme_heat_index` | Apparent air temperature, based on temperature and humidity. | `°C` |
-| `bme_dew_point` | Dew point, based on temperature and humidity. | `°C` |
+| `iot_up` | Status and metadata | |
+| `iot_humidity` | Air humidity. | `%` |
+| `iot_temperature` | Air temperature. | `°C` |
+| `iot_pressure` | Air pressure. | `Pa` |
+| `iot_heat_index` | Apparent air temperature, based on temperature and humidity. | `°C` |
+| `iot_dew_point` | Dew point, based on temperature and humidity. | `°C` |
 
 ## Requirements
 
@@ -24,18 +24,16 @@ Intended to be used on battery power, device goes into deep sleep between pushes
 
 ### Software
 
-- A Pushgateway server
 - [PlatformIO](https://platformio.org/)
 - [esp8266 library for Arduino](https://github.com/esp8266/Arduino)
 - [Adafruit BME280 library](https://github.com/adafruit/Adafruit_BME280_Library)
 
 ## Variables
 
-- `URL`Pushgateway server, no trailing slash
 - `COMPUTE_HEAT_INDEX` set to 0 to disable heat index compute, will return NaN
 - `COMPUTE_DEW_POINT` same but for dew point
-- `PUSH_INTERVAL` sets push interval (sleep duration) in seconds
-- `USE_DEEP_SLEEP` use deep sleep instead of turning wifi off
+- `SLEEP_INTERVAL` sets sleep duration in seconds
+- `USE_DEEP_SLEEP` 1 for deep sleep, 0 to turn wifi off, -1 keeps server active all the time
 
 ## Building
 

@@ -1,11 +1,9 @@
 #pragma once
 
-// Pushgateway URL, with port
-#define URL "http://10.0.10.21:9091"
-#define JOB "bme"
-#define INSTANCE WIFI_HOSTNAME
-// Number of retries waiting for the gateway to be up, 500ms between retries
-#define PUSHGATEWAY_WAIT 5
+// HTTP server port
+#define HTTP_SERVER_PORT 80
+// HTTP metrics endpoint
+#define HTTP_METRICS_ENDPOINT "/metrics"
 
 // GPIO 16 must be wired to RST
 // #define USE_DEEP_SLEEP 0
@@ -31,8 +29,8 @@
 #define TEMPERATURE_CORRECTION_OFFSET 0
 // Humidity offset in percent
 #define HUMIDITY_CORRECTION_OFFSET 0
-// How long to sleep between pushes, in seconds
-#define PUSH_INTERVAL 60
+// How long to sleep between requests, in seconds
+#define SLEEP_INTERVAL 30
 // Wi-Fi SSID (required)
 // #define WIFI_SSID ""
 // Wi-Fi password (required)
@@ -53,4 +51,4 @@
 // Static IPv4 secondary DNS server
 #define WIFI_IPV4_DNS_2 1, 1, 1, 1
 // Prometheus namespace, aka metric prefix
-#define PROM_NAMESPACE "bme"
+#define PROM_NAMESPACE "iot"
