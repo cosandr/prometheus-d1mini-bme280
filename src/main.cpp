@@ -35,6 +35,8 @@ WiFiClient wifiClient;
 
 bool request_handled;
 
+static char const *base_labels = "room=\"" ROOM "\",hostname=\"" WIFI_HOSTNAME "\"";
+
 void loop() {
 #if USE_DEEP_SLEEP == 0
     log("Turning off WiFi");
@@ -135,31 +137,30 @@ void handle_http_metrics() {
     static char const *up_template =
         "# HELP " PROM_NAMESPACE "_up Metadata about the device.\n"
         "# TYPE " PROM_NAMESPACE "_up gauge\n"
-        PROM_NAMESPACE "_up{room=\"%s\",version=\"%s\",board=\"%s\",sensor=\"%s\",mac=\"%s\"} %d\n";
+        PROM_NAMESPACE "_up{%s,version=\"%s\",board=\"%s\",sensor=\"%s\",mac=\"%s\"} %d\n";
     static char const *response_template =
         "# HELP " PROM_NAMESPACE "_humidity Air humidity.\n"
         "# TYPE " PROM_NAMESPACE "_humidity gauge\n"
         "# UNIT " PROM_NAMESPACE "_humidity %%\n"
-        PROM_NAMESPACE "_humidity{room=\"%s\"} %f\n"
+        PROM_NAMESPACE "_humidity{%s} %f\n"
         "# HELP " PROM_NAMESPACE "_temperature Air temperature.\n"
         "# TYPE " PROM_NAMESPACE "_temperature gauge\n"
         "# UNIT " PROM_NAMESPACE "_temperature \u00B0C\n"
-        PROM_NAMESPACE "_temperature{room=\"%s\"} %f\n"
+        PROM_NAMESPACE "_temperature{%s} %f\n"
         "# HELP " PROM_NAMESPACE "_pressure Air pressure.\n"
         "# TYPE " PROM_NAMESPACE "_pressure gauge\n"
         "# UNIT " PROM_NAMESPACE "_pressure Pa\n"
-        PROM_NAMESPACE "_pressure{room=\"%s\"} %f\n"
+        PROM_NAMESPACE "_pressure{%s} %f\n"
         "# HELP " PROM_NAMESPACE "_heat_index Apparent air temperature, based on temperature and humidity.\n"
         "# TYPE " PROM_NAMESPACE "_heat_index gauge\n"
         "# UNIT " PROM_NAMESPACE "_heat_index \u00B0C\n"
-        PROM_NAMESPACE "_heat_index{room=\"%s\"} %f\n"
+        PROM_NAMESPACE "_heat_index{%s} %f\n"
         "# HELP " PROM_NAMESPACE "_dew_point Dew point, based on temperature and humidity.\n"
         "# TYPE " PROM_NAMESPACE "_dew_point gauge\n"
         "# UNIT " PROM_NAMESPACE "_dew_point \u00B0C\n"
-        PROM_NAMESPACE "_dew_point{room=\"%s\"} %f\n";
+        PROM_NAMESPACE "_dew_point{%s} %f\n";
 
     char response[BUFSIZE];
-    char message[128];
     // Read sensors
     float temperature = read_temperature_sensor();
     float humidity = read_humidity_sensor();
@@ -167,19 +168,20 @@ void handle_http_metrics() {
     float heat_index = calculate_heat_index(temperature, humidity);
     float dew_point = calculate_dew_point(temperature, humidity);
 #if DEBUG_MODE == 1
+    char message[128];
     snprintf(message, 128, "T: %f, H: %f, P: %f, HI: %f, DP: %f", temperature, humidity, pressure, heat_index, dew_point);
     log(message, LogLevel::DEBUG);
 #endif
     if (isnan(humidity) || isnan(temperature) || isnan(pressure)) {
-        snprintf(response, BUFSIZE, up_template, ROOM, VERSION, BOARD_NAME, SENSOR_NAME, WiFi.macAddress().c_str(), 0);
+        snprintf(response, BUFSIZE, up_template, base_labels, VERSION, BOARD_NAME, SENSOR_NAME, WiFi.macAddress().c_str(), 0);
     } else {
-        int cx = snprintf(response, BUFSIZE, up_template, ROOM, VERSION, BOARD_NAME, SENSOR_NAME, WiFi.macAddress().c_str(), 1);
+        int cx = snprintf(response, BUFSIZE, up_template, base_labels, VERSION, BOARD_NAME, SENSOR_NAME, WiFi.macAddress().c_str(), 1);
         snprintf(response+cx, BUFSIZE-cx, response_template,
-            ROOM, humidity,
-            ROOM, temperature,
-            ROOM, pressure,
-            ROOM, heat_index,
-            ROOM, dew_point);
+            base_labels, humidity,
+            base_labels, temperature,
+            base_labels, pressure,
+            base_labels, heat_index,
+            base_labels, dew_point);
     }
     http_server.send(200, "text/plain; charset=utf-8", response);
     request_handled = true;
