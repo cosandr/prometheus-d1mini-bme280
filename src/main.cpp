@@ -26,9 +26,15 @@ void log(char const *message, LogLevel level=LogLevel::INFO);
 void setup_http_server();
 void setup_wifi();
 
-// Adafruit_BME280 bme; // I2C
-// Adafruit_BME280 bme(BME_CS); // hardware SPI
-Adafruit_BME280 bme(BME_CS, BME_MOSI, BME_MISO, BME_SCK); // software SPI
+#if BME_MODE == 1
+Adafruit_BME280 bme;
+#elif BME_MODE == 2
+Adafruit_BME280 bme(BME_CS);
+#elif BME_MODE == 3
+Adafruit_BME280 bme(BME_CS, BME_MOSI, BME_MISO, BME_SCK);
+#else
+#error Set BME_MODE to 1, 2 or 3.
+#endif
 
 ESP8266WebServer http_server(HTTP_SERVER_PORT);
 WiFiClient wifiClient;
