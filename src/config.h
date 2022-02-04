@@ -21,6 +21,11 @@
 #define BOARD_NAME "d1_mini"
 #define SENSOR_NAME "bme280"
 
+// 1 - I2C
+// 2 - SPI
+// 3 - Software SPI
+#define BME_MODE 3
+
 #define BME_SCK 2
 #define BME_MISO 5
 #define BME_MOSI 0
