@@ -4,6 +4,7 @@
 #define URL "http://10.0.10.21:9091"
 // Number of retries waiting for the gateway to be up, 500ms between retries
 #define PUSHGATEWAY_WAIT 5
+#define JOB "bme"
 
 // GPIO 16 must be wired to RST
 // #define USE_DEEP_SLEEP 0
