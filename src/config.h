@@ -31,7 +31,7 @@
 #define BME_CS 4
 
 // Temperature offset in degrees Celsius
-#define TEMPERATURE_CORRECTION_OFFSET 0
+// #define TEMPERATURE_CORRECTION_OFFSET 0
 // Humidity offset in percent
 #define HUMIDITY_CORRECTION_OFFSET 0
 // How long to sleep between requests, in seconds

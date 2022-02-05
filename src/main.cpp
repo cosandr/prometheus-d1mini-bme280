@@ -85,7 +85,7 @@ void setup(void) {
     snprintf(message, 128, "BME SensorID: 0x%x", bme.sensorID());
     log(message, LogLevel::DEBUG);
 
-    snprintf(message, 128, "Setting %d temperature offset", TEMPERATURE_CORRECTION_OFFSET);
+    snprintf(message, 128, "Setting %.2f temperature offset", float(TEMPERATURE_CORRECTION_OFFSET));
     log(message, LogLevel::DEBUG);
     bme.setTemperatureCompensation(float(TEMPERATURE_CORRECTION_OFFSET));
     snprintf(message, 128, "Temperature compensation: %.2f", bme.getTemperatureCompensation());
