@@ -75,7 +75,11 @@ void setup(void) {
 
     log("Setting up BME280 sensor", LogLevel::DEBUG);
 
+#if BME_MODE == 1
+    unsigned status = bme.begin(BME280_ADDRESS_ALTERNATE, &Wire);
+#else
     unsigned status = bme.begin();
+#endif
     while (!status) {
         log("Waiting for BME280 sensor...", LogLevel::DEBUG);
         delay(100);
